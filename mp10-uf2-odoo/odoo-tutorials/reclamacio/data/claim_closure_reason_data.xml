@@ -1,0 +1,8 @@
+<odoo>
+    <record id="claim_closure_reason_resolved" model="customer.claim.closure.reason">
+        <field name="name">Resolved</field>
+    </record>
+    <record id="claim_closure_reason_unresolved" model="customer.claim.closure.reason">
+        <field name="name">Unresolved</field>
+    </record>
+</odoo>

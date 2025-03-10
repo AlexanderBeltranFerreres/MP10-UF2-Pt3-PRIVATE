@@ -1,0 +1,14 @@
+<odoo>
+    <record id="view_claim_message_tree" model="ir.ui.view">
+        <field name="name">customer.claim.message.tree</field>
+        <field name="model">customer.claim.message</field>
+        <field name="arch" type="xml">
+            <tree string="Claim Messages">
+                <field name="claim_id"/>
+                <field name="author_id"/>
+                <field name="message"/>
+                <field name="date"/>
+            </tree>
+        </field>
+    </record>
+</odoo>
