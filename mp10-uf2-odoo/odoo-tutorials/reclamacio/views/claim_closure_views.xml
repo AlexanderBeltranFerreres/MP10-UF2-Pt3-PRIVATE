@@ -1,0 +1,33 @@
+<odoo>
+    <record id="view_claim_closure_reason_form" model="ir.ui.view">
+        <field name="name">customer.claim.closure.reason.form</field>
+        <field name="model">customer.claim.closure.reason</field>
+        <field name="arch" type="xml">
+            <form string="Closure Reason">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_claim_closure_reason_tree" model="ir.ui.view">
+        <field name="name">customer.claim.closure.reason.tree</field>
+        <field name="model">customer.claim.closure.reason</field>
+        <field name="arch" type="xml">
+            <tree string="Closure Reasons">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_customer_claim_closure_reason" model="ir.actions.act_window">
+        <field name="name">Closure Reasons</field>
+        <field name="res_model">customer.claim.closure.reason</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_customer_claim_closure_reason" name="Closure Reasons" parent="menu_customer_claim" action="action_customer_claim_closure_reason"/>
+</odoo>

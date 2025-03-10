@@ -1,0 +1,20 @@
+<odoo>
+    <record id="view_order_form_inherit_claim" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.claim</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <page string="Customer Claims" position="after">
+                <page string="Claims">
+                    <field name="claim_ids">
+                        <tree string="Claims">
+                            <field name="name"/>
+                            <field name="state"/>
+                            <field name="create_date"/>
+                        </tree>
+                    </field>
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>
