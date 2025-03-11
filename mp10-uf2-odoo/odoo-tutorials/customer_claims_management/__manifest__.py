@@ -14,5 +14,5 @@
       "data/claim_closure_reason_data.xml",
    ],
    "installable": True,
-   "license": "LGPL-3",
+"license": "LGPL-3",
 }
