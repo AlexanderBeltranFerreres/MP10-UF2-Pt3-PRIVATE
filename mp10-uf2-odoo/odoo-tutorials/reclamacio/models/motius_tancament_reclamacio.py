@@ -1,7 +1,7 @@
 from odoo import models, fields
 
-class ClaimClosureReason(models.Model):
-    _name = 'customer.claim.closure.reason'
-    _description = 'Customer Claim Closure Reason'
+class MotiuTancamentReclamacio(models.Model):
+    _name = 'client.reclamacio.tancament.motiu'
+    _description = 'Motiu de Tancament de Reclamacio al Client'
 
-    name = fields.Char(string='Reason', required=True)
+    name = fields.Char(string='Motiu', required=True)

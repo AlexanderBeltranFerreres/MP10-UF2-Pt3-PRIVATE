@@ -1,10 +1,10 @@
 <odoo>
-    <record id="view_claim_message_tree" model="ir.ui.view">
-        <field name="name">customer.claim.message.tree</field>
-        <field name="model">customer.claim.message</field>
+    <record id="view_missatge_reclamacio_tree" model="ir.ui.view">
+        <field name="name">client.reclamacio.missatge.tree</field>
+        <field name="model">client.reclamacio.missatge</field>
         <field name="arch" type="xml">
             <tree string="Claim Messages">
-                <field name="claim_id"/>
+                <field name="reclamacio_id"/>
                 <field name="author_id"/>
                 <field name="message"/>
                 <field name="date"/>

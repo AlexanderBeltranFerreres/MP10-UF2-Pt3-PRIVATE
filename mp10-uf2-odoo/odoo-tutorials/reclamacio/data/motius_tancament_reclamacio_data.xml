@@ -1,8 +1,8 @@
 <odoo>
-    <record id="claim_closure_reason_resolved" model="customer.claim.closure.reason">
-        <field name="name">Resolved</field>
+    <record id="motius_tancanment_reclamacio_resolt" model="client.reclamacio.tancament.motiu">
+        <field name="name">Resolt</field>
     </record>
-    <record id="claim_closure_reason_unresolved" model="customer.claim.closure.reason">
-        <field name="name">Unresolved</field>
+    <record id="motius_tancanment_reclamacio_pendent" model="client.reclamacio.tancament.motiu">
+        <field name="name">Pendent</field>
     </record>
 </odoo>
