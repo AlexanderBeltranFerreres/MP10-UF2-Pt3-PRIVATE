@@ -4,21 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9da4df1-7dca-4f73-9933-07a3d7f4ac2f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo-tutorials/customer_claims_management/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/odoo-tutorials/reclamacio/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo-tutorials/customer_claims_management/__manifest__.py" beforeDir="false" afterPath="$PROJECT_DIR$/odoo-tutorials/reclamacio/__manifest__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo-tutorials/customer_claims_management/data/claim_closure_reason_data.xml" beforeDir="false" afterPath="$PROJECT_DIR$/odoo-tutorials/reclamacio/data/motius_tancament_reclamacio_data.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo-tutorials/customer_claims_management/models/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/odoo-tutorials/reclamacio/models/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo-tutorials/customer_claims_management/models/claim.py" beforeDir="false" afterPath="$PROJECT_DIR$/odoo-tutorials/reclamacio/models/reclamacio.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo-tutorials/customer_claims_management/models/claim_closure_reason.py" beforeDir="false" afterPath="$PROJECT_DIR$/odoo-tutorials/reclamacio/models/motius_tancament_reclamacio.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo-tutorials/customer_claims_management/models/claim_message.py" beforeDir="false" afterPath="$PROJECT_DIR$/odoo-tutorials/reclamacio/models/missatge_reclamacio.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo-tutorials/customer_claims_management/security/ir.model.access.csv" beforeDir="false" afterPath="$PROJECT_DIR$/odoo-tutorials/reclamacio/security/ir.model.access.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo-tutorials/customer_claims_management/views/claim_closure_reason_views.xml" beforeDir="false" afterPath="$PROJECT_DIR$/odoo-tutorials/reclamacio/views/claim_closure_reason_views.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo-tutorials/customer_claims_management/views/claim_message_views.xml" beforeDir="false" afterPath="$PROJECT_DIR$/odoo-tutorials/reclamacio/views/claim_message_views.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo-tutorials/customer_claims_management/views/claim_views.xml" beforeDir="false" afterPath="$PROJECT_DIR$/odoo-tutorials/reclamacio/views/claim_views.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/odoo-tutorials/customer_claims_management/views/sale_order_views.xml" beforeDir="false" afterPath="$PROJECT_DIR$/odoo-tutorials/reclamacio/views/sale_order_views.xml" afterDir="false" />
-    </list>
+    <list default="true" id="d9da4df1-7dca-4f73-9933-07a3d7f4ac2f" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -65,7 +51,7 @@
       <option name="presentableId" value="Default" />
       <updated>1741617518582</updated>
       <workItem from="1741617519747" duration="189000" />
-      <workItem from="1741704859676" duration="1391000" />
+      <workItem from="1741704859676" duration="1701000" />
     </task>
     <servers />
   </component>
