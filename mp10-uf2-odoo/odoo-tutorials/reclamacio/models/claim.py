@@ -1,5 +1,4 @@
-from odoo import models, fields, api
-from odoo.exceptions import ValidationError
+from odoo import models, fields, api, validation_error
 
 class Claim(models.Model):
     _name = 'customer.claim'
@@ -46,7 +45,7 @@ class Claim(models.Model):
                     ('id', '!=', claim.id)
                 ])
                 if existing_claims:
-                    raise ValidationError('There is already an open claim for this sales order.')
+                    raise validation_error('There is already an open claim for this sales order.')
 
     def action_close(self):
         self.write({'state': 'closed', 'close_date': fields.Datetime.now()})
