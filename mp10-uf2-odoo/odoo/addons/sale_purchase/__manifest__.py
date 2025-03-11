@@ -18,7 +18,7 @@ by external providers and will automatically generate purchase orders directed t
     'data': [
         'data/mail_templates.xml',
         'views/product_views.xml',
-        'views/sale_order_views.xml',
+        'views/ordres_ventes_views.xml',
         'views/purchase_order_views.xml',
         'wizards/sale_order_cancel_views.xml',
     ],

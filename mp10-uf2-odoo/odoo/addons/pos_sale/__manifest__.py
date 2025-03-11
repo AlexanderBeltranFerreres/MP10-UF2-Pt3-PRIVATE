@@ -18,7 +18,7 @@ This module adds a custom Sales Team for the Point of Sale. This enables you to 
         'security/pos_sale_security.xml',
         'security/ir.model.access.csv',
         'views/point_of_sale_report.xml',
-        'views/sale_order_views.xml',
+        'views/ordres_ventes_views.xml',
         'views/pos_order_views.xml',
         'views/product_views.xml',
         'views/sales_team_views.xml',

@@ -19,7 +19,7 @@ have real delivered quantities in sales orders.
         'security/ir.model.access.csv',
         'security/sale_timesheet_security.xml',
         'views/account_invoice_views.xml',
-        'views/sale_order_views.xml',
+        'views/ordres_ventes_views.xml',
         'views/product_views.xml',
         'views/project_task_views.xml',
         'views/project_update_templates.xml',

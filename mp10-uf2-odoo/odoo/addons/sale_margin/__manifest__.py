@@ -17,7 +17,7 @@ Price and Cost Price.
         'data/sale_margin_demo.xml',
     ],
     'data':[
-        'views/sale_order_views.xml',
+        'views/ordres_ventes_views.xml',
     ],
     'license': 'LGPL-3',
 }

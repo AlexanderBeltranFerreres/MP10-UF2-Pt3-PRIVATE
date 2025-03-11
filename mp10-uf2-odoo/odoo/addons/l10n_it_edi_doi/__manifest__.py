@@ -20,7 +20,7 @@
         'views/report_invoice.xml',
         'views/res_partner_views.xml',
         'views/sale_ir_actions_report_templates.xml',
-        'views/sale_order_views.xml',
+        'views/ordres_ventes_views.xml',
     ],
     'license': 'LGPL-3',
     'post_init_hook': '_l10n_it_edi_doi_post_init',
