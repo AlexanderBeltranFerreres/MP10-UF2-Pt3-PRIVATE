@@ -1,62 +1,30 @@
 <odoo>
-    <record id="view_claim_form" model="ir.ui.view">
-        <field name="name">customer.claim.form</field>
-        <field name="model">customer.claim</field>
+    <record id="view_reclamacio_form" model="ir.ui.view">
+        <field name="name">client.reclamacio.form</field>
+        <field name="model">client.reclamacio</field>
         <field name="arch" type="xml">
-            <form string="Customer Claim">
-                <sheet>
-                    <group>
-                        <field name="name"/>
-                        <field name="description"/>
-                        <field name="state" widget="statusbar" statusbar_visible="new,in_progress,closed,cancelled"/>
-                        <field name="sale_order_id"/>
-                        <field name="customer_id"/>
-                        <field name="user_id"/>
-                        <field name="create_date" readonly="1"/>
-                        <field name="write_date" readonly="1"/>
-                        <field name="close_date" readonly="1"/>
-                        <field name="resolution_description"/>
-                        <field name="closure_reason_id"/>
-                    </group>
-                    <notebook>
-                        <page string="Messages">
-                            <field name="messages">
-                                <tree editable="bottom">
-                                    <field name="author_id"/>
-                                    <field name="message"/>
-                                    <field name="date"/>
-                                </tree>
-                            </field>
-                        </page>
-                    </notebook>
-                </sheet>
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="state"/>
+                    <field name="sale_order_id"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="create_date"/>
+                    <field name="write_date"/>
+                    <field name="close_date"/>
+                </group>
+
+                <notebook>
+                   
+                </notebook>
+
+                <group>
+                    <field name="resolution_description"/>
+                    <field name="cancel_reason_id"/>
+                </group>
             </form>
         </field>
     </record>
-
-    <record id="view_claim_tree" model="ir.ui.view">
-        <field name="name">customer.claim.tree</field>
-        <field name="model">customer.claim</field>
-        <field name="arch" type="xml">
-            <tree string="Customer Claims">
-                <field name="name"/>
-                <field name="state"/>
-                <field name="sale_order_id"/>
-                <field name="customer_id"/>
-                <field name="create_date"/>
-                <field name="write_date"/>
-                <field name="close_date"/>
-            </tree>
-        </field>
-    </record>
-
-     <menuitem id="menu_customer_claim_root" name="Customer Claims" sequence="10"/>
-
-    <record id="action_customer_claim" model="ir.actions.act_window">
-        <field name="name">Customer Claims</field>
-        <field name="res_model">customer.claim</field>
-        <field name="view_mode">tree,form</field>
-    </record>
-
-    <menuitem id="menu_customer_claim" name="Customer Claims" parent="menu_customer_claim_root" action="action_customer_claim"/>
 </odoo>

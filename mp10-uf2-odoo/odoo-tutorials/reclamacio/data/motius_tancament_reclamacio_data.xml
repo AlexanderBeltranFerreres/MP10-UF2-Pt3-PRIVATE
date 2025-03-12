@@ -1,8 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-    <record id="motius_tancanment_reclamacio_resolt" model="client.reclamacio.tancament.motiu">
+    <record id="motius_tancament_reclamacio_resolt" model="client.reclamacio.tancament.motiu">
         <field name="name">Resolt</field>
     </record>
-    <record id="motius_tancanment_reclamacio_pendent" model="client.reclamacio.tancament.motiu">
+    <record id="motius_tancament_reclamacio_pendent" model="client.reclamacio.tancament.motiu">
         <field name="name">Pendent</field>
     </record>
 </odoo>

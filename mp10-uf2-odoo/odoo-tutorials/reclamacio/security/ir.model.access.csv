@@ -1,4 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_customer_claim,access_customer_claim,model_client_reclamacio,,1,1,1,1
-access_customer_claim_message,access_customer_claim_message,model_customer_claim_message,,1,1,1,1
+access_customer_claim_message,access_customer_claim_message,model_client_reclamacio_message,,1,1,1,1
 access_customer_claim_closure_reason,access_customer_claim_closure_reason,model_client_reclamacio_tancament_motiu,,1,1,1,1

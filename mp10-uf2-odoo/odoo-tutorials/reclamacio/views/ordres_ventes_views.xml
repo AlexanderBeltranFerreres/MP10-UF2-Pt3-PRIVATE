@@ -5,15 +5,15 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <page string="Customer Claims" position="after">
-                <page string="Claims">
+                <group>
                     <field name="claim_ids">
-                        <tree string="Claims">
+                        <tree>
                             <field name="name"/>
                             <field name="state"/>
                             <field name="create_date"/>
                         </tree>
                     </field>
-                </page>
+                </group>
             </page>
         </field>
     </record>

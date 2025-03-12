@@ -2,6 +2,7 @@ from odoo import models, fields
 
 class MotiuTancamentReclamacio(models.Model):
     _name = 'client.reclamacio.tancament.motiu'
-    _description = 'Motiu de Tancament de Reclamacio al Client'
+    _description = 'Motius de Tancament o Cancel·lació de Reclamacions'
 
-    name = fields.Char(string='Motiu', required=True)
+    # Nom del motiu
+    name = fields.Char('Motiu', required=True)
