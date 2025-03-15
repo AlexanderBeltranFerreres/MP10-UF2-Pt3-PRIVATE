@@ -1,16 +1,20 @@
 {
    'name': 'Gestio Reclamacions',
-   'version': '3.2',
+   'version': '3.4.4',
    'summary': 'Gestionar Reclamacions',
    'author': 'David Groza & Alexander Beltran',
    'category': 'Sales',
    'application': True,
-   'depends': ['base','sale'],
+   'depends': ['base','sale', 'sale_management', 'account', 'stock'],
    'data': [
       'security/ir.model.access.csv',
       'views/reclamacio_views.xml',
       'views/reclamacio_menus.xml',
+      'views/reclamacio_message_views.xml',
+      'views/motiu_tancament_reclamacio_views.xml',
       'data/motius_tancament_reclamacio_data.xml',
+      'views/correu_cancel.xml',
+      'views/ordres_ventes_views.xml',
    ],
    'installable': True,
 }

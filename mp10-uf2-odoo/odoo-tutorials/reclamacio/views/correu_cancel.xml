@@ -1,0 +1,19 @@
+<odoo>
+    <data>
+        <record id="correu_cancelar_ordre" model="mail.template">
+            <field name="name">Cancel·lació de la comanda</field>
+            <field name="email_from">${(user.email_formatted or user.company_id.email) | safe}</field>
+            <field name="subject">Cancel·lació de la comanda ${object.name}</field>
+            <field name="body_html">
+                <![CDATA[
+                    <p>Benvolgut/da ${object.partner_id.name},</p>
+                    <p>Us informem que la vostra comanda ${object.name} ha estat cancel·lada.</p>
+                    <p>Per a més informació, si us plau, contacteu-nos.</p>
+                    <p>Atentament,</p>
+                    <p>Alexander Beltran</p>
+                ]]>
+            </field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+        </record>
+    </data>
+</odoo>

@@ -4,17 +4,38 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <page string="Customer Claims" position="after">
-                <group>
-                    <field name="claim_ids">
-                        <tree>
+            <notebook>
+                <!-- Afegeix la pestanya de reclamacions -->
+                <page name="Reclamacions del Client" position="after">
+                    <field name="claim_ids" widget="one2many_list">
+                        <list>
                             <field name="name"/>
                             <field name="state"/>
                             <field name="create_date"/>
-                        </tree>
+                        </list>
                     </field>
-                </group>
-            </page>
+                </page>
+            </notebook>
+
+            <group position="after">
+                <!-- Botó per veure les factures -->
+                <button name="%(action_reclamacio_invoice)d" 
+                        string="Veure Factures" 
+                        type="action" 
+                        class="btn btn-primary oe_stat_button" 
+                        icon="fa fa-file-invoice" 
+                        widget="statinfo" 
+                        domain="[('invoice_count', '>', 0)]" />
+                <!-- Botó per veure els enviaments -->
+                <button name="%(action_reclamacio_picking)d" 
+                        string="Veure Enviaments" 
+                        type="action" 
+                        class="btn btn-success oe_stat_button" 
+                        icon="fa fa-truck" 
+                        widget="statinfo" 
+                        domain="[('delivery_count', '>', 0)]" />
+            </group>
+
         </field>
     </record>
 </odoo>

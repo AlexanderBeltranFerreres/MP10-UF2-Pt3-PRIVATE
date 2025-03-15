@@ -2,7 +2,7 @@
 <odoo>
     <!-- Acció per a les reclamacions -->
     <record id="action_reclamacio_view" model="ir.actions.act_window">
-        <field name="name">Reclamacions</field>
+        <field name="name">RECLAMACIONS</field>
         <field name="res_model">client.reclamacio</field>
         <field name="view_mode">list,form</field>
         <field name="target">current</field>
@@ -17,14 +17,63 @@
     <!-- Menú per als missatges de les reclamacions -->
     <menuitem id="menu_client_reclamacio_messages" name="Missatges de Reclamació" parent="menu_reclamacio" sequence="2"/>
 
+    <!-- Submenú per gestionar els motius de tancament -->
+    <menuitem id="menu_reclamacio_motius_tancament"
+              name="Motius de Tancament"
+              parent="menu_reclamacions"
+              action="action_customer_claim_closure_reason"
+              sequence="20"/>
+
     <!-- Acció per a veure els missatges associats a cada reclamació -->
     <record id="action_client_reclamacio_message" model="ir.actions.act_window">
         <field name="name">Missatges</field>
         <field name="res_model">client.reclamacio.message</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="target">current</field>
     </record>
 
     <!-- Assignem l'acció als menús -->
-    <menuitem id="menu_client_reclamacio_messages" name="Missatges" parent="menu_reclamacio" action="action_client_reclamacio_message"/>
+    <menuitem id="menu_client_reclamacio_message" name="Missatges" parent="menu_client_reclamacio_messages" action="action_client_reclamacio_message"/>
+
+    <!-- Acció per veure només les comandes de venda associades a la reclamació -->
+    <record id="action_reclamacio_sale_order" model="ir.actions.act_window">
+        <field name="name">Comandes de Vendes</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'reclamacio_id': context.get('active_id', False)}</field>
+        <field name="target">current</field>
+    </record>
+
+    <!-- Menú per accedir a les comandes de venda des d'una reclamació -->
+    <menuitem id="menu_reclamacio_sale_order_action" name="Comandes de Vendes" parent="menu_reclamacio" action="action_reclamacio_sale_order"/>
+
+    <!-- Menú per als enviaments associats -->
+    <menuitem id="menu_reclamacio_picking" name="Enviaments" parent="menu_reclamacio" sequence="4"/>
+
+    <!-- Acció per veure els enviaments d'una reclamació -->
+    <record id="action_reclamacio_picking" model="ir.actions.act_window">
+        <field name="name">Enviaments</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'reclamacio_id': context.get('active_id', False)}</field>
+        <field name="target">current</field>
+    </record>
+
+    <!-- Assignem l'acció d'enviaments al menú -->
+    <menuitem id="menu_reclamacio_picking_action" name="Enviaments" parent="menu_reclamacio" action="action_reclamacio_picking"/>
+
+    <!-- Menú per a les factures associades -->
+    <menuitem id="menu_reclamacio_invoice" name="Factures" parent="menu_reclamacio" sequence="5"/>
+
+    <!-- Acció per a veure les factures associades a la reclamació -->
+    <record id="action_reclamacio_invoice" model="ir.actions.act_window">
+        <field name="name">Factures</field>
+        <field name="res_model">account.move</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'reclamacio_id': context.get('active_id', False)}</field>
+        <field name="target">current</field>
+    </record>
+
+    <!-- Assignem l'acció de factures al menú -->
+    <menuitem id="menu_reclamacio_invoice_action" name="Factures" parent="menu_reclamacio" action="action_reclamacio_invoice"/>
 </odoo>
