@@ -13,6 +13,10 @@ class ClientReclamacioMessage(models.Model):
     message_date = fields.Datetime("Data del Missatge")
     reclamacio_id = fields.Many2one('client.reclamacio', string="Reclamació")
     reclamacio_name = fields.Char(related='reclamacio_id.name', string="Reclamació", store=True)
+    message_type = fields.Selection([
+        ('user_notification', 'User Notification'),
+        ('other', 'Other')
+    ], default='other', string="Message Type")
 
     @api.model
     def create(self, vals):
@@ -21,11 +25,11 @@ class ClientReclamacioMessage(models.Model):
         # Comprovar si l'autor és un client (no un usuari d'Odoo)
         partner_id = vals.get('partner_id')
         if partner_id:
-            # Si el missatge ve d'un client, és obligatòria
+            # Si el missatge ve d'un client 
             if not vals.get('reclamacio_id'):
-                vals['reclamacio_id'] = False  # Potser no hi ha comanda associada
+                vals['reclamacio_id'] = False  # no es obligat la reclamacio associada
         else:
-            # Si el missatge ve d'un usuari d'Odoo,obligatòria
+            # Si el missatge ve d'un usuari de Odoo, és obligat
             if not vals.get('reclamacio_id'):
                 raise ValidationError('Per als missatges d\'usuari d\'Odoo, cal indicar una comanda associada.')
 
@@ -33,7 +37,7 @@ class ClientReclamacioMessage(models.Model):
 
 
     @api.model
-    def write(self):
+    def write(self, vals):
         raise ValidationError("Els missatges no es poden modificar un cop creats.")
     
     def unlink(self):

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <odoo>
-    <!-- Acció per a les reclamacions -->
+    <!-- ACCIONS -->
     <record id="action_reclamacio_view" model="ir.actions.act_window">
         <field name="name">RECLAMACIONS</field>
         <field name="res_model">client.reclamacio</field>
@@ -8,23 +8,6 @@
         <field name="target">current</field>
     </record>
 
-    <!-- Menú principal de "Gestió Reclamacions" -->
-    <menuitem id="menu_reclamacions" name="Gestió Reclamacions" sequence="10"/>
-
-    <!-- Menú per a la vista de les reclamacions -->
-    <menuitem id="menu_reclamacio" name="Reclamacions" parent="menu_reclamacions" action="action_reclamacio_view" sequence="1"/>
-
-    <!-- Menú per als missatges de les reclamacions -->
-    <menuitem id="menu_client_reclamacio_messages" name="Missatges de Reclamació" parent="menu_reclamacio" sequence="2"/>
-
-    <!-- Submenú per gestionar els motius de tancament -->
-    <menuitem id="menu_reclamacio_motius_tancament"
-              name="Motius de Tancament"
-              parent="menu_reclamacions"
-              action="action_customer_claim_closure_reason"
-              sequence="20"/>
-
-    <!-- Acció per a veure els missatges associats a cada reclamació -->
     <record id="action_client_reclamacio_message" model="ir.actions.act_window">
         <field name="name">Missatges</field>
         <field name="res_model">client.reclamacio.message</field>
@@ -32,10 +15,6 @@
         <field name="target">current</field>
     </record>
 
-    <!-- Assignem l'acció als menús -->
-    <menuitem id="menu_client_reclamacio_message" name="Missatges" parent="menu_client_reclamacio_messages" action="action_client_reclamacio_message"/>
-
-    <!-- Acció per veure només les comandes de venda associades a la reclamació -->
     <record id="action_reclamacio_sale_order" model="ir.actions.act_window">
         <field name="name">Comandes de Vendes</field>
         <field name="res_model">sale.order</field>
@@ -44,13 +23,6 @@
         <field name="target">current</field>
     </record>
 
-    <!-- Menú per accedir a les comandes de venda des d'una reclamació -->
-    <menuitem id="menu_reclamacio_sale_order_action" name="Comandes de Vendes" parent="menu_reclamacio" action="action_reclamacio_sale_order"/>
-
-    <!-- Menú per als enviaments associats -->
-    <menuitem id="menu_reclamacio_picking" name="Enviaments" parent="menu_reclamacio" sequence="4"/>
-
-    <!-- Acció per veure els enviaments d'una reclamació -->
     <record id="action_reclamacio_picking" model="ir.actions.act_window">
         <field name="name">Enviaments</field>
         <field name="res_model">stock.picking</field>
@@ -59,13 +31,6 @@
         <field name="target">current</field>
     </record>
 
-    <!-- Assignem l'acció d'enviaments al menú -->
-    <menuitem id="menu_reclamacio_picking_action" name="Enviaments" parent="menu_reclamacio" action="action_reclamacio_picking"/>
-
-    <!-- Menú per a les factures associades -->
-    <menuitem id="menu_reclamacio_invoice" name="Factures" parent="menu_reclamacio" sequence="5"/>
-
-    <!-- Acció per a veure les factures associades a la reclamació -->
     <record id="action_reclamacio_invoice" model="ir.actions.act_window">
         <field name="name">Factures</field>
         <field name="res_model">account.move</field>
@@ -74,6 +39,31 @@
         <field name="target">current</field>
     </record>
 
-    <!-- Assignem l'acció de factures al menú -->
-    <menuitem id="menu_reclamacio_invoice_action" name="Factures" parent="menu_reclamacio" action="action_reclamacio_invoice"/>
+    <record id="action_customer_claim_closure_reason" model="ir.actions.act_window">
+    <field name="name">Motiu de Tancament de Reclamació</field>
+    <field name="res_model">client.reclamacio.tancament.motiu</field>
+    <field name="view_mode">list,form</field>
+    </record>
+
+
+    <!-- Menú principal de "Gestió Reclamacions" -->
+    <menuitem id="menu_reclamacions" name="Gestió Reclamacions" sequence="10"/>
+
+    <!-- Menú per a la vista de les reclamacions -->
+    <menuitem id="menu_reclamacio" name="Reclamacions" parent="menu_reclamacions" action="action_reclamacio_view" sequence="20"/>
+
+    <!-- Menú per als missatges de les reclamacions -->
+    <menuitem id="menu_client_reclamacio_messages" name="Missatges de Reclamació" parent="menu_reclamacions" action="action_client_reclamacio_message" sequence="30"/>
+
+    <!-- Menú per a les comandes de vendes -->
+    <menuitem id="menu_reclamacio_sale_order_action" name="Comandes de Vendes" parent="menu_reclamacions" action="action_reclamacio_sale_order" sequence="40"/>
+
+    <!-- Menú per als enviaments associats -->
+    <menuitem id="menu_reclamacio_picking_action" name="Enviaments" parent="menu_reclamacions" action="action_reclamacio_picking" sequence="50"/>
+
+    <!-- Menú per a les factures associades -->
+    <menuitem id="menu_reclamacio_invoice_action" name="Factures" parent="menu_reclamacions" action="action_reclamacio_invoice" sequence="60"/>
+
+    <!-- Menú per gestionar els motius de tancament -->
+    <menuitem id="menu_reclamacio_motius_tancament" name="Motius de Tancament" parent="menu_reclamacions" action="action_customer_claim_closure_reason" sequence="70"/>
 </odoo>

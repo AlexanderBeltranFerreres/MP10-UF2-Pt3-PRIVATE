@@ -6,6 +6,7 @@ _logger = logging.getLogger(__name__)
 class ClientReclamacio(models.Model):
     _name = 'client.reclamacio'
     _description = 'Reclamacions dels clients'
+    _inherit = ['mail.thread']
 
     # Assumpte de la reclamació
     name = fields.Char('Assumpte de la Reclamació', required=True)
@@ -21,10 +22,10 @@ class ClientReclamacio(models.Model):
         ('cancel·lada', 'Cancel·lada'),
     ], string='Estat', default='nova', required=True)
 
-    # Afegir camp per a la comanda de vendes
+    # Afegir camp per a la comanda de vendes associada
     sale_order_id = fields.Many2one('sale.order', string="Comanda de Vendes", ondelete='set null')
 
-    # Camps amb el total de factures i els enviament associats al comanda
+    # Camps dels numero total de factures i els enviament de la comanda associada
     invoice_count = fields.Integer(
         string="Nombre de Factures",
         compute="_compute_invoice_count",
@@ -37,12 +38,23 @@ class ClientReclamacio(models.Model):
         store=True
     )
     
-    # Afegir camps per a les factures associades
-    invoice_ids = fields.One2many('account.move', 'reclamacio_id', string="Factures", domain=[('move_type', '=', 'out_invoice')])
-    
-    # Afegir camps per a enviaments associats
-    picking_ids = fields.One2many('stock.picking', 'reclamacio_id', string="Enviaments")
-
+    # Camps per a les factures associades a la comanda de venda
+    invoice_ids = fields.One2many(
+        'account.move', 
+        'invoice_origin', 
+        string="Factures", 
+        domain=[('move_type', '=', 'out_invoice')],
+        compute="_compute_invoice_ids", 
+        store=False
+    )
+    # Camps per a enviaments associats a la comanda de venda
+    picking_ids = fields.One2many(
+        'stock.picking', 
+        'origin', 
+        string="Enviaments",
+        compute="_compute_picking_ids", 
+        store=False
+    )
     # Client que fa la reclamació
     partner_id = fields.Many2one('res.partner', string='Client', required=True)
 
@@ -67,9 +79,9 @@ class ClientReclamacio(models.Model):
     def _check_unique_open_reclamacio(self):
         for record in self:
             if record.state in ['nova', 'en_tractament']:
-                # Comprovar si és un registre nou (no guardat a la base de dades)
-                if not record.id:  # Si no té id, vol dir que és nou
-                    # Cercar si ja existeix una reclamació oberta (nova o en_tractament) per la mateixa comanda
+                # Comprovar si és un registre nou que no esta la base de dades
+                if not record.id:
+                    # Mirar si tenim una reclamacio (nova o en_tractament) pper a la comanda que hem associat
                     existing_reclamacio = self.search([
                         ('sale_order_id', '=', record.sale_order_id.id),
                         ('state', 'in', ['nova', 'en_tractament'])
@@ -77,11 +89,11 @@ class ClientReclamacio(models.Model):
                     if existing_reclamacio:
                         raise ValidationError('Ja existeix una reclamació oberta per aquesta comanda de venda.')
                 else:
-                    # Si ja és un registre existent, comprovem que no s'estigui canviant l'estat a nova o en_tractament
+                    # Si existix una reclamacio mirem que no s'estigui canviant l'estat a nova o en_tractament
                     existing_reclamacio = self.search([
                         ('sale_order_id', '=', record.sale_order_id.id),
                         ('state', 'in', ['nova', 'en_tractament']),
-                        ('id', '!=', record.id)  # Excloem el registre actual
+                        ('id', '!=', record.id)  # Traem el registre actuial
                     ])
                     if existing_reclamacio:
                         raise ValidationError('Ja existeix una reclamació oberta per aquesta comanda de venda.')
@@ -98,14 +110,14 @@ class ClientReclamacio(models.Model):
 
                 # Comprovar si el missatge està associat correctament amb la reclamació
                 if any(message.reclamacio_id != record for message in record.message_ids):
-                    raise ValidationError('Els missatges associats no estan correctament vinculats a aquesta reclamació.')
+                    raise ValidationError('Els missatges no estan correctament associats a aquesta reclamació.')
 
                 # Canviar l'estat a en tractament
                 record.state = 'en_tractament'
 
                 # Crear un missatge automàtic per indicar que s'ha posat en tractament
                 self.env['client.reclamacio.message'].create({
-                    'reclamacio_id': record.id,  # Assegurar-se que el missatge estigui associat a la reclamació
+                    'reclamacio_id': record.id,  # Mirem si el missatge està associat a la erclamacio
                     'message': 'Reclamació en tractament.',
                     'author_id': self.env.user.id,
                 })
@@ -116,19 +128,16 @@ class ClientReclamacio(models.Model):
         # Comprovar si estem canviant l'estat
         if 'state' in vals:
             for record in self:
-                # Si estem reobrint la reclamació, assegurem-nos que l'estat actual sigui 'tancada'
-                if vals['state'] == 'en_tractament' and record.state != 'tancada':
-                    raise ValidationError('Només es poden reobrir reclamacions tancades.')
                     
-                # Validació si estem canviant l'estat a 'en_tractament'
+                # Mirem si estem canviant l'estat a 'en_tractament'
                 if vals['state'] == 'en_tractament':
-                    # Comprovar si hi ha almenys un missatge associat
+                    # Mirem si te un missatge associat
                     if not record.message_ids:
                         raise ValidationError('Per posar la reclamació en tractament, s\'ha de crear almenys un missatge associat.')
                     
                     # Comprovar si els missatges estan associats correctament amb la reclamació
                     if any(message.reclamacio_id != record for message in record.message_ids):
-                        raise ValidationError('Els missatges associats no estan correctament vinculats a aquesta reclamació.')
+                        raise ValidationError('Els missatges no estan correctament associats a aquesta reclamació.')
 
         return super(ClientReclamacio, self).write(vals)
 
@@ -157,9 +166,9 @@ class ClientReclamacio(models.Model):
         if args:
             ##ITERAR SOBER ARGS PERQUE ÉS EL QUE PASSA ODOO NOU NO EL QUE TENIM, SINO DONA ERROR
             for record_id in args[0]:  # args[0] conté la llista d'IDs
-                record = self.browse(record_id)  # Obtenir el registre complet per l'ID
+                record = self.browse(record_id)  # Obtenir el registre per l'ID
 
-                # Log per veure el que estem processant
+                # Log per comprovar TREURE DESPRES
                 _logger.info('Processant registre: %s', record)
                 if isinstance(record, models.BaseModel):  # Verifiquem que és un registre de Odoo
                     _logger.info('Registre és una instància de BaseModel')
@@ -175,42 +184,39 @@ class ClientReclamacio(models.Model):
                     # Enviar una acció per refrescar la vista
                     return {
                         'type': 'ir.actions.client',
-                        'tag': 'reload',  # Asegura't que es refresqui la vista
+                        'tag': 'reload',
                     }
                 else:
-                    _logger.error('El registre no és una instància de BaseModel.')
+                    _logger.error('El registre no és de odoo (basemodel)')
         else:
-            _logger.error('No s\'han passat arguments a la funció.')
+            _logger.error('Funcio buida')
 
-        _logger.info('Funció acabada sense processar cap registre.')
-
+        _logger.info('no fa res la funció')
 
 
     
     def action_cancelar_comanda(self, *args):
         for record in self:
+
             if not record.sale_order_id:
-                raise ValidationError('Aquesta reclamació no té cap comanda associada.')
+                raise ValidationError('La reclamació no té cap comanda associada.')
             
-            # Comprovem si la comanda ja té factures publicades
+            # Comprovem si la comanda te factures publicades
             if any(invoice.state == 'posted' for invoice in record.sale_order_id.invoice_ids):
                 raise ValidationError("No es pot cancel·lar la comanda ja que té factures publicades.")
             
-            # Comprovem que la comanda no estigui en estat 'sale' o 'done'
-            if record.sale_order_id.state in ['sale', 'done']:
-                raise ValidationError('No es pot cancel·lar una comanda de venda confirmada o finalitzada.')
-            
-            # Cancel·lem els enviaments no realitzats
-            for picking in record.sale_order_id.picking_ids.filtered(lambda p: p.state != 'done'):
-                picking.action_cancel()
-            
-            # Cancel·lem les factures no publicades
-            for invoice in record.sale_order_id.invoice_ids.filtered(lambda i: i.state != 'posted'):
-                invoice.button_cancel()
-
             # Enviar correu al client informant de la cancel·lació
             template = self.env.ref('reclamacio.correu_cancelar_ordre')
             template.send_mail(record.sale_order_id.id, force_send=True)
+            
+            # Cancel·lem les factures no publicades
+            for invoice in record.sale_order_id.id.invoice_ids.filtered(lambda i: i.state != 'posted'):
+                invoice.button_cancel()
+            
+            
+            # Cancel·lem els enviaments no realitzats
+            for picking in record.sale_order_id.picking_ids.filtered(lambda p: p.state != 'done'):
+                picking.button_cancel()
 
             # Finalment, cancel·lem la comanda
             record.sale_order_id.action_cancel()  # Cancel·la la comanda
@@ -240,28 +246,48 @@ class ClientReclamacio(models.Model):
                 rec.delivery_count = 0
 
     def action_view_delivery(self):
-        """
-        Evitar error si no hi ha enviaments associats.
-        """
+        
+        ##Evitar error si no hi ha enviaments associats.
+        
         if not self.picking_ids:
             return {'type': 'ir.actions.act_window_close'}
         
         return self._get_action_view_picking(self.picking_ids)
 
 
+    @api.depends('sale_order_id')
+    def _compute_invoice_ids(self):
+        for rec in self:
+            if rec.sale_order_id:
+                rec.invoice_ids = self.env['account.move'].search([
+                    ('invoice_origin', '=', rec.sale_order_id.name),
+                    ('move_type', '=', 'out_invoice')
+                ])
+            else:
+                rec.invoice_ids = False
+
+    @api.depends('sale_order_id')
+    def _compute_picking_ids(self):
+        for rec in self:
+            if rec.sale_order_id:
+                rec.picking_ids = self.env['stock.picking'].search([
+                    ('origin', '=', rec.sale_order_id.name)
+                ])
+            else:
+                rec.picking_ids = False
 
 
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
     
-    # Afegir el vincle amb la reclamació
+    # Afegir enllaç a reclamació
     reclamacio_id = fields.Many2one('client.reclamacio', string="Reclamació", ondelete='cascade')
     
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
     
-    # Afegir el vincle amb la reclamació
+    # enllaç reclamació
     reclamacio_id = fields.Many2one('client.reclamacio', string="Reclamació", ondelete='cascade')
 
 
@@ -295,7 +321,7 @@ class SaleOrder(models.Model):
             # Cancel·lar la comanda i les factures associades no publicades
             # Primer, cancel·lem els enviaments que no han estat realitzats
             for picking in order.picking_ids.filtered(lambda p: p.state != 'done'):
-                picking.action_cancel()
+                picking.button_cancel()
 
             # Després, cancel·lem les factures no publicades
             for invoice in order.invoice_ids.filtered(lambda i: i.state != 'posted'):

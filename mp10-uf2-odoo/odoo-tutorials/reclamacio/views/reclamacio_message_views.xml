@@ -9,6 +9,7 @@
                 <field name="author_id"/>
                 <field name="partner_id"/>
                 <field name="reclamacio_name" string="Nom de la Reclamació"/>
+                <field name="message_date"/>
             </list>
         </field>
     </record>
@@ -24,6 +25,8 @@
                         <field name="message"/>
                         <field name="author_id"/>
                         <field name="partner_id"/>
+                        <field name="reclamacio_name" string="Nom de la Reclamació"/>
+                        <field name="message_date" string="Data del Missatge"/>
                     </group>
                 </sheet>
             </form>

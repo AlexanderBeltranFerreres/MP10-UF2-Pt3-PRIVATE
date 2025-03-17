@@ -5,7 +5,7 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <notebook>
-                <!-- Afegeix la pestanya de reclamacions -->
+                <!-- pestanya de reclamacions -->
                 <page name="Reclamacions del Client" position="after">
                     <field name="claim_ids" widget="one2many_list">
                         <list>
