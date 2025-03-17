@@ -195,34 +195,48 @@ class ClientReclamacio(models.Model):
 
 
     
-    def action_cancelar_comanda(self, *args):
+    def action_cancelar_comanda(self):
         for record in self:
-
             if not record.sale_order_id:
                 raise ValidationError('La reclamació no té cap comanda associada.')
-            
-            # Comprovem si la comanda te factures publicades
-            if any(invoice.state == 'posted' for invoice in record.sale_order_id.invoice_ids):
+
+            sale_order = record.sale_order_id
+
+            _logger.info(f"Intentant cancel·lar la comanda: {sale_order.id} - Estat actual: {sale_order.state}")
+
+            # Bloquegem la cancel·lació si hi ha factures publicades
+            if any(invoice.state == 'posted' for invoice in sale_order.invoice_ids):
                 raise ValidationError("No es pot cancel·lar la comanda ja que té factures publicades.")
-            
-            # Enviar correu al client informant de la cancel·lació
-            template = self.env.ref('reclamacio.correu_cancelar_ordre')
-            template.send_mail(record.sale_order_id.id, force_send=True)
-            
-            # Cancel·lem les factures no publicades
-            for invoice in record.sale_order_id.id.invoice_ids.filtered(lambda i: i.state != 'posted'):
-                invoice.button_cancel()
-            
-            
-            # Cancel·lem els enviaments no realitzats
-            for picking in record.sale_order_id.picking_ids.filtered(lambda p: p.state != 'done'):
+
+            # Cancel·lar primer els enviaments pendents
+            for picking in sale_order.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel')):
+                _logger.info(f"Cancel·lant enviament: {picking.id} - Estat: {picking.state}")
                 picking.button_cancel()
 
+            # Cancel·lar les factures en esborrany (no publicades)
+            for invoice in sale_order.invoice_ids.filtered(lambda i: i.state == 'draft'):
+                _logger.info(f" Cancel·lant factura: {invoice.id} - Estat: {invoice.state}")
+                invoice.button_cancel()
+
             # Finalment, cancel·lem la comanda
-            record.sale_order_id.action_cancel()  # Cancel·la la comanda
-            
+            _logger.info(f"Cancel·lant comanda: {sale_order.id}")
+            sale_order.write({'state': 'cancel'})
+            _logger.info(f"✅ Comanda {sale_order.id} canviada manualment a 'cancel'")
+
+            # Tornem a comprovar si s'ha cancel·lat correctament
+            _logger.info(f" Estat final de la comanda: {sale_order.state}")
+
+            # Enviar correu després de cancel·lar la comanda
+            template = self.env.ref('reclamacio.correu_cancelar_ordre')
+            if template:
+                _logger.info("Enviant correu de cancel·lació")
+                template.send_mail(sale_order.id, force_send=True)
 
         return True
+
+
+
+
 
     @api.depends('sale_order_id')
     def _compute_invoice_count(self):
@@ -311,22 +325,23 @@ class SaleOrder(models.Model):
     
     def action_cancel(self):
         for order in self:
+            # Bloquegem la cancel·lació si hi ha factures publicades
             if any(invoice.state == 'posted' for invoice in order.invoice_ids):
                 raise ValidationError("No es pot cancel·lar la comanda ja que té factures publicades.")
-            
-            # Enviar correu al client informant de la cancel·lació
-            template = self.env.ref('reclamacio.correu_cancelar_ordre')
-            template.send_mail(order.id, force_send=True)
-            
-            # Cancel·lar la comanda i les factures associades no publicades
-            # Primer, cancel·lem els enviaments que no han estat realitzats
-            for picking in order.picking_ids.filtered(lambda p: p.state != 'done'):
+
+            # Cancel·lar els enviaments pendents
+            for picking in order.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel')):
                 picking.button_cancel()
 
-            # Després, cancel·lem les factures no publicades
-            for invoice in order.invoice_ids.filtered(lambda i: i.state != 'posted'):
+            # Cancel·lar les factures en esborrany (no publicades)
+            for invoice in order.invoice_ids.filtered(lambda i: i.state == 'draft'):
                 invoice.button_cancel()
-            
+
+            # Enviar correu després de cancel·lar tot
+            template = self.env.ref('reclamacio.correu_cancelar_ordre')
+            if template:
+                template.send_mail(order.id, force_send=True)
+
             # Finalment, cancel·lem la comanda
             return super(SaleOrder, self).action_cancel()
 
