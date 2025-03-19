@@ -1,0 +1,1 @@
+from . import report_mombre_ofertes_propietat

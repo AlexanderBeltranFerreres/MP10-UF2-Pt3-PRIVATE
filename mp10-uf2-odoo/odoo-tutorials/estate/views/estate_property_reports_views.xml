@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="estate_property_report_nombre_ofertes_per_propietat_view_list" model="ir.ui.view">
+        <field name="name">report.nombre.ofertes.propietat.list</field>
+        <field name="model">report.nombre.ofertes.propietat</field>
+        <field name="arch" type="xml">
+            <list string="Report ofertes per propietat" create="false" delete="false" edit="false">
+                <field name="name" />
+                <field name="nombre_ofertes" />
+            </list>
+        </field>
+    </record>
+    <record id="estate_property_report_nombre_ofertes_per_propietat_action"
+        model="ir.actions.act_window">
+        <field name="name">Report ofertes per propietat</field>
+        <field name="res_model">report.nombre.ofertes.propietat</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

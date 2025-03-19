@@ -6,7 +6,6 @@ _logger = logging.getLogger(__name__)
 class ClientReclamacio(models.Model):
     _name = 'client.reclamacio'
     _description = 'Reclamacions dels clients'
-    _inherit = ['mail.thread']
 
     # Assumpte de la reclamació
     name = fields.Char('Assumpte de la Reclamació', required=True)
@@ -202,40 +201,44 @@ class ClientReclamacio(models.Model):
 
             sale_order = record.sale_order_id
 
-            _logger.info(f"Intentant cancel·lar la comanda: {sale_order.id} - Estat actual: {sale_order.state}")
-
-            # Bloquegem la cancel·lació si hi ha factures publicades
+            # SI FACTURES PUBLICADES MISSATGE
             if any(invoice.state == 'posted' for invoice in sale_order.invoice_ids):
                 raise ValidationError("No es pot cancel·lar la comanda ja que té factures publicades.")
 
             # Cancel·lar primer els enviaments pendents
             for picking in sale_order.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel')):
-                _logger.info(f"Cancel·lant enviament: {picking.id} - Estat: {picking.state}")
                 picking.button_cancel()
 
             # Cancel·lar les factures en esborrany (no publicades)
             for invoice in sale_order.invoice_ids.filtered(lambda i: i.state == 'draft'):
-                _logger.info(f" Cancel·lant factura: {invoice.id} - Estat: {invoice.state}")
                 invoice.button_cancel()
 
-            # Finalment, cancel·lem la comanda
-            _logger.info(f"Cancel·lant comanda: {sale_order.id}")
-            sale_order.write({'state': 'cancel'})
-            _logger.info(f"✅ Comanda {sale_order.id} canviada manualment a 'cancel'")
 
-            # Tornem a comprovar si s'ha cancel·lat correctament
-            _logger.info(f" Estat final de la comanda: {sale_order.state}")
-
-            # Enviar correu després de cancel·lar la comanda
+            # Enviar correu
             template = self.env.ref('reclamacio.correu_cancelar_ordre')
             if template:
-                _logger.info("Enviant correu de cancel·lació")
-                template.send_mail(sale_order.id, force_send=True)
+                
+                #Veure que passa exactament a la plantilla
+                _logger.info(f"Valors passats a la plantilla:\n"
+                            f"  - Comanda ID: {sale_order.id}\n"
+                            f"  - Nom comanda: {sale_order.name}\n"
+                            f"  - Client: {sale_order.partner_id.name}\n"
+                            f"  - Email client: {sale_order.partner_id.email}")
 
+                #Passar tots els valors manualment AL OBJECTE
+                mail_context = {
+                    'object': sale_order,
+                    'sale_order_id': sale_order.id,
+                    'sale_order_name': sale_order.name,
+                    'partner_name': sale_order.partner_id.name,
+                    'partner_email': sale_order.partner_id.email,
+                }
+
+                template.with_context(mail_context).send_mail(sale_order.id, force_send=True)
+                
+            # cancel·lem la comanda
+            sale_order.write({'state': 'cancel'})
         return True
-
-
-
 
 
     @api.depends('sale_order_id')
@@ -325,7 +328,6 @@ class SaleOrder(models.Model):
     
     def action_cancel(self):
         for order in self:
-            # Bloquegem la cancel·lació si hi ha factures publicades
             if any(invoice.state == 'posted' for invoice in order.invoice_ids):
                 raise ValidationError("No es pot cancel·lar la comanda ja que té factures publicades.")
 
@@ -337,12 +339,12 @@ class SaleOrder(models.Model):
             for invoice in order.invoice_ids.filtered(lambda i: i.state == 'draft'):
                 invoice.button_cancel()
 
-            # Enviar correu després de cancel·lar tot
+            # Enviar correu
             template = self.env.ref('reclamacio.correu_cancelar_ordre')
             if template:
                 template.send_mail(order.id, force_send=True)
 
-            # Finalment, cancel·lem la comanda
+            # cancel·lem la comanda
             return super(SaleOrder, self).action_cancel()
 
     def action_view_delivery(self):

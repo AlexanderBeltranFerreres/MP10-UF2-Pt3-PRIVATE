@@ -1,0 +1,19 @@
+<odoo>
+    <data>
+        <record id="correu_cancelar_ordre_noformat" model="mail.template">
+            <field name="name">Cancel·lació de la comanda</field>
+            <field name="email_from">deco_addict@yourcompany.example.com</field>
+            <field name="subject">Cancel·lació de la comanda</field>
+            <field name="body_html">
+                <![CDATA[
+                    <p>Benvolgut/da client,</p>
+                    <p>Us informem que la vostra comanda ha estat cancel·lada.</p>
+                    <p>Per a més informació, si us plau, contacteu-nos.</p>
+                    <p>Atentament,</p>
+                    <p>Alexander Beltran</p>
+                ]]>
+            </field>
+            <field name="model_id" ref="sale.model_sale_order"/>
+        </record>
+    </data>
+</odoo>
